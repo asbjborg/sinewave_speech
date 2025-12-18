@@ -134,19 +134,28 @@ with gr.Blocks(title="Sinewave Speech Synthesizer") as demo:
     
     Convert speech into sinewave speech using Linear Predictive Coding (LPC).
     
-    **Tip:** For the comparison file, listen to the sinewave version *first* before hearing the original!
+    **Tips for Best Results:**
+    - 🎤 Speak clearly and at a moderate pace
+    - 🔇 Record in a quiet environment
+    - 🎚️ Start with the default settings, then experiment
+    - 👂 For A/B comparison, listen to sinewave *first* before the original!
+    
+    **What is Sinewave Speech?** Speech represented with just a few frequency-modulated sine waves. 
+    Despite extreme simplification, it often remains surprisingly intelligible!
     """)
     
     with gr.Row():
         with gr.Column(scale=1):
             # Input
+            gr.Markdown("### 🎵 Input Audio")
             audio_input = gr.Audio(
-                label="Upload Audio File or Record from Microphone",
+                label="Upload or Record (⚠️ Avoid the scissor/trim tool - it may freeze)",
                 type="filepath",
                 sources=["upload", "microphone"]
             )
             
             # Mode selection
+            gr.Markdown("### ⚙️ Synthesis Settings")
             mode = gr.Radio(
                 choices=["Sinewave", "Buzz", "Noise"],
                 value="Sinewave",
@@ -171,16 +180,16 @@ with gr.Blocks(title="Sinewave Speech Synthesizer") as demo:
                 value=4,
                 step=1,
                 label="Order (number of components)",
-                info="Number of sine wave components"
+                info="More components = more detail but potentially noisier (try 4-5)"
             )
             
             decimation = gr.Slider(
                 minimum=1,
                 maximum=16,
-                value=8,
+                value=4,
                 step=1,
                 label="Decimation Factor",
-                info="Sample rate reduction before analysis"
+                info="Higher = faster processing but less detail (try 4-8)"
             )
             
             # Advanced parameters
@@ -188,17 +197,19 @@ with gr.Blocks(title="Sinewave Speech Synthesizer") as demo:
                 low_freq = gr.Slider(
                     minimum=40,
                     maximum=500,
-                    value=250,
+                    value=150,
                     step=10,
-                    label="Low Frequency Cutoff (Hz)"
+                    label="Low Frequency Cutoff (Hz)",
+                    info="Lower = more bass (try 100-200 for speech)"
                 )
                 
                 high_freq = gr.Slider(
                     minimum=1000,
                     maximum=5000,
-                    value=3400,
+                    value=2800,
                     step=100,
-                    label="High Frequency Cutoff (Hz)"
+                    label="High Frequency Cutoff (Hz)",
+                    info="Critical for quality! Try 2000-3000 for best results"
                 )
                 
                 window_size = gr.Slider(
@@ -207,7 +218,7 @@ with gr.Blocks(title="Sinewave Speech Synthesizer") as demo:
                     value=200,
                     step=10,
                     label="Window Size (samples)",
-                    info="Smaller = faster changing, Larger = smoother"
+                    info="Smaller (90-150) = tracks fast speech, Larger (200-300) = smoother"
                 )
                 
                 overlap = gr.Slider(
@@ -216,7 +227,7 @@ with gr.Blocks(title="Sinewave Speech Synthesizer") as demo:
                     value=0.25,
                     step=0.05,
                     label="Window Overlap",
-                    info="Fraction of window length"
+                    info="Higher = smoother transitions but slower (0.25 is usually good)"
                 )
                 
                 bw_amp = gr.Slider(
@@ -225,7 +236,7 @@ with gr.Blocks(title="Sinewave Speech Synthesizer") as demo:
                     value=60,
                     step=5,
                     label="Bandwidth Amplitude Scaling",
-                    info="Larger = flatter amplitude, Smaller = emphasize formants"
+                    info="Higher (60-80) = balanced, Lower (30-40) = emphasize strong formants"
                 )
             
             # Comparison options
@@ -314,16 +325,18 @@ with gr.Blocks(title="Sinewave Speech Synthesizer") as demo:
     gr.Markdown("### Example Presets")
     gr.Examples(
         examples=[
-            ["Sinewave", 4, 250, 3400, 8, 200, 0.25, 60, False, 80],
-            ["Sinewave", 5, 200, 3400, 8, 200, 0.25, 60, True, 80],
-            ["Buzz", 4, 250, 2000, 8, 300, 0.25, 60, False, 80],
-            ["Noise", 4, 200, 3400, 8, 200, 0.25, 60, False, 80],
+            ["Sinewave", 4, 150, 2800, 4, 200, 0.25, 60, False, 80],  # Default - good for most speech
+            ["Sinewave", 4, 100, 3000, 4, 200, 0.25, 60, True, 80],   # Clear speech with comparison
+            ["Sinewave", 5, 200, 3400, 8, 200, 0.25, 60, False, 80],  # More components
+            ["Sinewave", 4, 330, 2500, 8, 90, 0.25, 60, False, 80],   # Fast-changing speech
+            ["Buzz", 4, 250, 2000, 8, 300, 0.25, 60, False, 80],      # Robotic buzz mode
+            ["Noise", 4, 200, 3400, 8, 200, 0.25, 60, False, 80],     # Whisper mode
         ],
         inputs=[
             mode, order, low_freq, high_freq, decimation, 
             window_size, overlap, bw_amp, create_comparison, buzz_freq
         ],
-        label="Try these presets"
+        label="Try these presets (click any row to load settings)"
     )
 
 
