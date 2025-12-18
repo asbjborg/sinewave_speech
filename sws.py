@@ -191,7 +191,7 @@ def lpc_vocode(
     """
 
     # precompute the hamming window
-    window = scipy.signal.hann(frame_len)
+    window = scipy.signal.windows.hann(frame_len)
     t = np.arange(frame_len)
     # allocate the array for the output
     vocode = np.zeros(len(wave + frame_len))
@@ -280,7 +280,7 @@ def sinethesise(wave, frame_len, order, sr=44100, use_lsp=False, noise=1.0, over
     formants, formant_bw = formants_from_lsp(lsps, sr)
 
     synthesize = np.zeros_like(wave)
-    window = scipy.signal.hann(frame_len)
+    window = scipy.signal.windows.hann(frame_len)
     t = np.arange(0.0, frame_len)
     k = 0    
     for i in range(0, len(wave), frame_overlap):
@@ -432,6 +432,14 @@ def main(args):
         "--overlap", "-l", help="Window overlap, as fraction of the window length. Default 0.25", default=0.25, type=float,
     )
 
+    parser.add_argument(
+        "--comparison", "-c", help="Generate an A/B comparison file (output-output-input-output-input-output)", action="store_true"
+    )
+
+    parser.add_argument(
+        "--gap", help="Gap between segments in comparison file (seconds). Default 0.5", default=0.5, type=float,
+    )
+
     args = parser.parse_args(args[1:])
 
     args.output_wav = (
@@ -492,6 +500,25 @@ def main(args):
     
     scipy.io.wavfile.write(output_path, fs, (up_modulated*32767.0).astype(np.int16))
     print(f"Wrote {output_path}")
+
+    # Generate A/B comparison file if requested
+    if args.comparison:
+        gap_samples = int(args.gap * fs)
+        gap = np.zeros(gap_samples)
+        
+        # Pattern: OUTPUT, OUTPUT, INPUT, OUTPUT, INPUT, OUTPUT
+        comparison = np.concatenate([
+            up_modulated, gap,
+            up_modulated, gap,
+            wav, gap,
+            up_modulated, gap,
+            wav, gap,
+            up_modulated
+        ])
+        
+        comparison_path = output_path.parent / (output_path.stem + "_comparison" + output_path.suffix)
+        scipy.io.wavfile.write(comparison_path, fs, (comparison*32767.0).astype(np.int16))
+        print(f"Wrote comparison file: {comparison_path}")
 
 
 if __name__ == "__main__":

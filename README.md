@@ -46,6 +46,13 @@ More examples:
 
     # uses modulation of white noise instead of sinewaves
     python sws.py hello.wav --noise
+
+    # generate an A/B comparison file (output-output-input-output-input-output)
+    # this helps your brain "learn" to hear the sinewave speech
+    python sws.py hello.wav --comparison
+
+    # comparison with custom gap between segments (default 0.5 seconds)
+    python sws.py hello.wav --comparison --gap 1.0
 ```
 
 ## Command line parameters
@@ -79,6 +86,9 @@ More examples:
         --noise, -n           Resynthesize using filtered white noise
         --overlap OVERLAP, -l OVERLAP
                                 Window overlap, as fraction of the window length
+        --comparison, -c      Generate an A/B comparison file that plays output twice,
+                                then input, output, input, output (helps learn to hear it)
+        --gap GAP             Gap between segments in comparison file (seconds)
 
 ## Technical details
 
