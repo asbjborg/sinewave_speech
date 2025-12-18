@@ -141,8 +141,9 @@ with gr.Blocks(title="Sinewave Speech Synthesizer") as demo:
         with gr.Column(scale=1):
             # Input
             audio_input = gr.Audio(
-                label="Upload Audio File (WAV, MP3, etc.)",
-                type="filepath"
+                label="Upload Audio File or Record from Microphone",
+                type="filepath",
+                sources=["upload", "microphone"]
             )
             
             # Mode selection
