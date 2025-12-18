@@ -186,10 +186,10 @@ with gr.Blocks(title="Sinewave Speech Synthesizer") as demo:
             decimation = gr.Slider(
                 minimum=1,
                 maximum=16,
-                value=4,
+                value=8,
                 step=1,
                 label="Decimation Factor",
-                info="Higher = faster processing but less detail (try 4-8)"
+                info="Higher = faster processing but less detail (default: 8)"
             )
             
             # Advanced parameters
@@ -197,19 +197,19 @@ with gr.Blocks(title="Sinewave Speech Synthesizer") as demo:
                 low_freq = gr.Slider(
                     minimum=40,
                     maximum=500,
-                    value=150,
+                    value=250,
                     step=10,
                     label="Low Frequency Cutoff (Hz)",
-                    info="Lower = more bass (try 100-200 for speech)"
+                    info="Lower = more bass (default: 250 Hz, try 100-200 for experiments)"
                 )
                 
                 high_freq = gr.Slider(
                     minimum=1000,
                     maximum=5000,
-                    value=2800,
+                    value=3400,
                     step=100,
                     label="High Frequency Cutoff (Hz)",
-                    info="Critical for quality! Try 2000-3000 for best results"
+                    info="Upper frequency limit (default: 3400 Hz, try 2000-3000 for variations)"
                 )
                 
                 window_size = gr.Slider(
@@ -325,18 +325,18 @@ with gr.Blocks(title="Sinewave Speech Synthesizer") as demo:
     gr.Markdown("### Example Presets")
     gr.Examples(
         examples=[
-            ["Sinewave", 4, 150, 2800, 4, 200, 0.25, 60, False, 80],  # Default - good for most speech
-            ["Sinewave", 4, 100, 3000, 4, 200, 0.25, 60, True, 80],   # Clear speech with comparison
-            ["Sinewave", 5, 200, 3400, 8, 200, 0.25, 60, False, 80],  # More components
-            ["Sinewave", 4, 330, 2500, 8, 90, 0.25, 60, False, 80],   # Fast-changing speech
-            ["Buzz", 4, 250, 2000, 8, 300, 0.25, 60, False, 80],      # Robotic buzz mode
-            ["Noise", 4, 200, 3400, 8, 200, 0.25, 60, False, 80],     # Whisper mode
+            ["Sinewave", 4, 250, 3400, 8, 200, 0.25, 60, False, 80],  # CLI defaults - matches ex3.wav
+            ["Sinewave", 4, 150, 3000, 4, 200, 0.25, 60, False, 80],  # Ex1 - clear speech
+            ["Sinewave", 5, 200, 3400, 8, 200, 0.25, 60, False, 80],  # Ex2 - more components
+            ["Sinewave", 4, 330, 2500, 8, 90, 0.25, 60, False, 80],   # Ex6 - fast-changing
+            ["Buzz", 4, 250, 2000, 8, 300, 0.25, 60, False, 80],      # Ex7 - robotic buzz
+            ["Noise", 4, 200, 3400, 8, 200, 0.25, 60, False, 80],     # Ex8 - whisper mode
         ],
         inputs=[
             mode, order, low_freq, high_freq, decimation, 
             window_size, overlap, bw_amp, create_comparison, buzz_freq
         ],
-        label="Try these presets (click any row to load settings)"
+        label="Try these presets (based on the example files)"
     )
 
 
