@@ -20,7 +20,30 @@ Listen to some sounds. If you've not listened to these before, listen to the sin
 
 ## Usage 
 
-Requires `scipy` and `numpy` only.
+### Web Interface (Recommended)
+
+The easiest way to use this tool is through the Gradio web interface:
+
+```sh
+# Install dependencies (first time only)
+pip install -r requirements.txt
+
+# Launch the web interface
+python app.py
+```
+
+Then open your browser to the URL shown (typically `http://localhost:7860`).
+
+The web interface provides:
+- **Easy file upload** for any audio format
+- **Interactive sliders** for all parameters
+- **Real-time preview** of processed audio
+- **A/B comparison** generation with one click
+- **Preset examples** to get started quickly
+
+### Command Line Interface
+
+Requires `scipy` and `numpy` only (or `pip install -r requirements.txt` for all features).
 
 Examples of use:
 
